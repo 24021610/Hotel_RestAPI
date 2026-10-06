@@ -17,6 +17,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/*
+ * Service xử lý các nghiệp vụ logic liên quan đến tài khoản người dùng trong hệ thống Hotel REST API.
+ */
+
+
 @Service
 public class UserService {
 
