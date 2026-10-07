@@ -36,6 +36,8 @@ import lombok.*;
 
 
 @Builder
+@Setter
+@Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
