@@ -21,17 +21,21 @@ public class UserController {
 
     // POST /users: Tạo mới user (dùng cho admin để quản lí cơ sở dữ liệu, khác đăng ký)
     @PostMapping
-    public ApiResponse<User> createUser(@RequestBody @Valid UserCreationRequest request) {
-        ApiResponse<User> response = new ApiResponse<>();
-        response.setResult(userService.createUser(request));
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.builder().
+                result(userService.createUser(request)).
+                build();
         return response;
     }
 
     // GET /users: Lấy danh sách user
     @GetMapping
-    public ApiResponse<List<User>> getUsers() {
-        ApiResponse<List<User>> response = new ApiResponse<>();
-        response.setResult(userService.getUsers());
+    public ApiResponse<List<UserResponse>> getUsers() {
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.builder().
+                result(userService.getUsers())
+                .build();
         return response;
     }
 
@@ -45,20 +49,24 @@ public class UserController {
 
     // PUT /users/{userId}: Cập nhật user
     @PutMapping("/{userId}")
-    public ApiResponse<User> updateUser(
+    public ApiResponse<UserResponse> updateUser(
             @PathVariable("userId") String userId,
             @RequestBody @Valid UserUpdateRequest request) {
-        ApiResponse<User> response = new ApiResponse<>();
-        response.setResult(userService.updateUser(userId, request));
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.builder().
+                result(userService.updateUser(userId, request))
+                .build();
         return response;
     }
 
     // DELETE /users/{userId}: Xóa user
     @DeleteMapping("/{userId}")
-    public ApiResponse<String> deleteUser(@PathVariable("userId") String userId) {
+    public ApiResponse<UserResponse> deleteUser(@PathVariable("userId") String userId) {
         userService.deleteUser(userId);
-        ApiResponse<String> apiResponse = new ApiResponse<>();
-        apiResponse.setResult("User has been deleted successfully");
-        return apiResponse;
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.builder().
+                message("User deleted successfully")
+                .build();
+        return response;
     }
 }

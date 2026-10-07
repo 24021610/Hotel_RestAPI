@@ -31,7 +31,7 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    public User createUser(UserCreationRequest user) {
+    public UserResponse createUser(UserCreationRequest user) {
         User newUser = userMapper.toUser(user);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -39,12 +39,11 @@ public class UserService {
         if (userRepository.existsByusername(user.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-
-        return userRepository.save(newUser);
+        return userMapper.toUserResponse(newUser);
     }
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
+    public List<UserResponse> getUsers() {
+        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
     public UserResponse getUser(String id) {
@@ -52,10 +51,10 @@ public class UserService {
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
-    public User updateUser(String id, UserUpdateRequest request) {
+    public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         userMapper.updateUser(user, request);
-        return userRepository.save(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public void deleteUser(String id) {
