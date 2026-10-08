@@ -39,7 +39,7 @@ public class UserService {
         if (userRepository.existsByusername(user.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        return userMapper.toUserResponse(newUser);
+        return userMapper.toUserResponse(userRepository.save(newUser));
     }
 
     public List<UserResponse> getUsers() {
