@@ -37,9 +37,16 @@ public class UserController {
 
     // GET /users/{userId}: Lấy chi tiết user
     @GetMapping("/{userId}")
-    public ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
+    public ApiResponse<UserResponse> getUserById(@PathVariable("userId") String userId) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.getUser(userId))
+                .result(userService.getUserById(userId))
+                .build();
+    }
+
+    @GetMapping("/by-username/{username}")
+    public ApiResponse<UserResponse> getUserByUsername(@PathVariable("username") String username) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getUserByUsername(username))
                 .build();
     }
 

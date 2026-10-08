@@ -1,7 +1,10 @@
 package com.example.hotel_restapi.dto.response;
 
+import com.example.hotel_restapi.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -13,4 +16,5 @@ public class UserResponse {
     String username;
     String firstName;
     String lastName;
+    Set<Role> roles;
 }

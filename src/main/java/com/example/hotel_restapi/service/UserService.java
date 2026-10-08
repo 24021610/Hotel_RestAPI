@@ -9,6 +9,9 @@ import com.example.hotel_restapi.exception.AppException;
 import com.example.hotel_restapi.exception.ErrorCode;
 import com.example.hotel_restapi.mapper.UserMapper;
 import com.example.hotel_restapi.repository.UserRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,17 +26,17 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
+    UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserMapper userMapper;
 
     public UserResponse createUser(UserCreationRequest user) {
         User newUser = userMapper.toUser(user);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
         if (userRepository.existsByusername(user.getUsername())) {
@@ -46,10 +49,16 @@ public class UserService {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
-    public UserResponse getUser(String id) {
+    public UserResponse getUserById(String id) {
         return userMapper.toUserResponse(
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
+
+    public UserResponse getUserByUsername(String username) {
+        return userMapper.toUserResponse(
+                userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+    }
+
 
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

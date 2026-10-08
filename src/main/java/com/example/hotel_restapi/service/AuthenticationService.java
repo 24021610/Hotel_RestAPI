@@ -49,7 +49,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        var user = userRepository.findByusername(authenticationRequest.getUsername()).orElseThrow(()
+        var user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(()
                 -> new AppException(ErrorCode.USER_NOT_EXISTED));
         var password = authenticationRequest.getPassword();
         PasswordEncoder encoder = new BCryptPasswordEncoder();
