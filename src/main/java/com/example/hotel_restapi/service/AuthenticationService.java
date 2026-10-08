@@ -5,6 +5,7 @@ import com.example.hotel_restapi.dto.request.AuthenticationRequest;
 import com.example.hotel_restapi.dto.request.IntrospectRequest;
 import com.example.hotel_restapi.dto.response.AuthenticationResponse;
 import com.example.hotel_restapi.dto.response.IntrospectResponse;
+import com.example.hotel_restapi.entity.User;
 import com.example.hotel_restapi.exception.AppException;
 import com.example.hotel_restapi.exception.ErrorCode;
 import com.example.hotel_restapi.repository.UserRepository;
@@ -12,6 +13,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +26,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
@@ -57,18 +60,18 @@ public class AuthenticationService {
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         } else {
-            var token = generateJWTToken(user.getUsername());
+            var token = generateJWTToken(user);
             return AuthenticationResponse.builder().token(token).authenticated(true).build();
         }
     }
 
-    private String generateJWTToken(String username) {
+    private String generateJWTToken(User user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(username)
-                .issuer("Hotel")
+                .subject(user.getUsername())
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()))
+                .claim("scope", buildScope(user))
                 .build();
         Payload payload  = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);
@@ -78,5 +81,13 @@ public class AuthenticationService {
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String buildScope(User user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
+        if (!CollectionUtils.isEmpty(user.getRoles())) {
+            user.getRoles().forEach(stringJoiner::add);
+        }
+        return stringJoiner.toString();
     }
 }

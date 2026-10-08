@@ -18,5 +18,5 @@ public class UserUpdateRequest {
     String password;
     String firstName;
     String lastName;
-    Set<Role> roles;
+    Set<String> roles;
 }
