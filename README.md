@@ -4,7 +4,7 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 
 ---
 
-## 📑 Mục lục
+##  Mục lục
 - [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
 - [Bảo mật & Xác thực](#-bảo-mật--xác-thực)
 - [Chức năng nghiệp vụ](#-chức-năng-nghiệp-vụ)
@@ -13,7 +13,7 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 
 ---
 
-## 🏛 Kiến trúc hệ thống
+##  Kiến trúc hệ thống
 
 Dự án áp dụng mô hình **Layered Architecture** và tổ chức mã nguồn theo khía cạnh kỹ thuật (**Package by Layer**). Cấu trúc trong `com.example.hotel_restapi` gồm các package chính:
 
@@ -27,7 +27,7 @@ Dự án áp dụng mô hình **Layered Architecture** và tổ chức mã ngu�
 
 ---
 
-## 🔐 Bảo mật & Xác thực
+##  Bảo mật & Xác thực
 
 * **Cơ chế**: Sử dụng JSON Web Token (JWT) cho Authentication và Authorization.
 * **Xử lý tập trung**: Kiểm tra tính hợp lệ của Token và quyền hạn người dùng tại tầng Filter/Middleware của Spring Security.
@@ -35,7 +35,7 @@ Dự án áp dụng mô hình **Layered Architecture** và tổ chức mã ngu�
 
 ---
 
-## 🚀 Chức năng nghiệp vụ
+##  Chức năng nghiệp vụ
 
 ### 1. Quản lý Tài khoản (Auth & Users)
 * Đăng ký tài khoản khách hàng mới.
@@ -74,12 +74,15 @@ Hệ thống đã cấu hình sẵn `Dockerfile` và `docker-compose.yml` để 
 ### Các bước thực hiện
 
 **Bước 1: Clone repository**
+```bash
+git clone [https://github.com/your-username/hotel-booking-backend.git](https://github.com/your-username/hotel-booking-backend.git)
+cd hotel-booking-backend
+```
+
 **Bước 2: Khởi chạy toàn bộ hệ thống**
 
 Chạy lệnh sau tại thư mục gốc của dự án để build image và khởi động các container ở chế độ chạy ngầm (detached mode):
 
 ```bash
 docker compose up --build -d
-```bash
-git clone [https://github.com/your-username/hotel-booking-backend.git](https://github.com/your-username/hotel-booking-backend.git)
-cd hotel-booking-backend
+```
