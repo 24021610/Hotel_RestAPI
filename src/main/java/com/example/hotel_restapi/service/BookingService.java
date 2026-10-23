@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,10 +71,32 @@ public class BookingService {
         return toBookingResponse(bookingRepository.save(booking));
     }
 
+    @Transactional(readOnly = true)
+    public List<BookingResponse> getMyBookings(String username) {
+        User user = findUser(username);
+
+        return bookingRepository.findByUserId(user.getId())
+                .stream()
+                .map(this::toBookingResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public BookingResponse getBookingById(Long id, String username) {
+        return bookingRepository.findByIdAndUserUsername(id, username)
+                .map(this::toBookingResponse)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+    }
+
     private void validateDateRange(LocalDate checkIn, LocalDate checkOut) {
         if (!checkOut.isAfter(checkIn)) {
             throw new AppException(ErrorCode.BOOKING_DATE_INVALID);
         }
+    }
+
+    private User findUser(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
     private BookingResponse toBookingResponse(Booking booking) {
