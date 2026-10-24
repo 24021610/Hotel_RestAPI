@@ -27,6 +27,7 @@ public enum ErrorCode {
     BOOKING_DATE_INVALID(1018, "Check-out date must be after check-in date", HttpStatus.BAD_REQUEST),
     BOOKING_ROOM_UNAVAILABLE(1019, "Room is already booked for the requested period", HttpStatus.CONFLICT),
     BOOKING_NOT_EXISTED(1020, "Booking not found", HttpStatus.NOT_FOUND),
+    BOOKING_ALREADY_CANCELLED(1021, "Booking is already cancelled", HttpStatus.CONFLICT),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

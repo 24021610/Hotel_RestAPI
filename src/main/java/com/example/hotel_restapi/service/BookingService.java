@@ -88,6 +88,19 @@ public class BookingService {
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
     }
 
+    @Transactional
+    public BookingResponse cancelBooking(Long id, String username) {
+        Booking booking = bookingRepository.findByIdAndUserUsername(id, username)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+
+        if (booking.getStatus() == BookingStatus.CANCELLED) {
+            throw new AppException(ErrorCode.BOOKING_ALREADY_CANCELLED);
+        }
+
+        booking.setStatus(BookingStatus.CANCELLED);
+        return toBookingResponse(bookingRepository.save(booking));
+    }
+
     private void validateDateRange(LocalDate checkIn, LocalDate checkOut) {
         if (!checkOut.isAfter(checkIn)) {
             throw new AppException(ErrorCode.BOOKING_DATE_INVALID);
