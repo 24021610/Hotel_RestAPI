@@ -21,6 +21,7 @@ public enum ErrorCode {
     ROOM_CAPACITY_INVALID(1012, "Number of persons must be at least 1", HttpStatus.BAD_REQUEST),
     ROOM_TYPE_REQUIRED(1013, "Room type is required", HttpStatus.BAD_REQUEST),
     ROOM_PRICE_INVALID(1014, "Room price must be greater than 0", HttpStatus.BAD_REQUEST),
+    ROOM_CANNOT_DELETE_OCCUPIED(1022, "Cannot delete room that is currently occupied", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

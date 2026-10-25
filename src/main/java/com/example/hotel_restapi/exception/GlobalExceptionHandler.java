@@ -7,7 +7,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.nio.file.AccessDeniedException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import java.util.Objects;
 
 @Slf4j
@@ -15,7 +17,7 @@ import java.util.Objects;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse> handleRuntimeException(RuntimeException exception) {
+    ResponseEntity<ApiResponse> handleException(Exception exception) {
         ApiResponse apiResponse = new ApiResponse();
 
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
@@ -23,7 +25,7 @@ public class GlobalExceptionHandler {
 
         log.error("Exception: ", exception);
 
-        return ResponseEntity.badRequest().
+        return ResponseEntity.status(ErrorCode.UNCATEGORIZED_EXCEPTION.getStatusCode()).
                 body(apiResponse);
     }
 
@@ -56,6 +58,23 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    ResponseEntity<ApiResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        String message = "Malformed JSON request or invalid field format";
+        if (exception.getCause() instanceof InvalidFormatException invalidFormatException) {
+            if (invalidFormatException.getTargetType() != null && invalidFormatException.getTargetType().isEnum()) {
+                message = "Invalid value for enum field";
+            }
+        }
+
+        ApiResponse apiResponse = ApiResponse.builder()
+                .code(ErrorCode.INVALID_KEY.getCode())
+                .message(message)
+                .build();
+
         return ResponseEntity.badRequest().body(apiResponse);
     }
 

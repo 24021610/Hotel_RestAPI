@@ -2,13 +2,15 @@ package com.example.hotel_restapi.configuration;
 
 import java.util.HashSet;
 
-import com.example.hotel_restapi.entity.User;
-import com.example.hotel_restapi.enums.Role;
-import com.example.hotel_restapi.repository.UserRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.example.hotel_restapi.entity.User;
+import com.example.hotel_restapi.enums.Role;
+import com.example.hotel_restapi.repository.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,6 +37,16 @@ public class InitConfiguration {
                         .roles(roles)
                         .build();
                 userRepository.save(user);
+            }
+            if (userRepository.findByUsername("user").isEmpty()) {
+                var userRoles = new HashSet<String>();
+                userRoles.add(Role.USER.name());
+                User normalUser = User.builder()
+                        .username("user")
+                        .password(passwordEncoder.encode("user"))
+                        .roles(userRoles)
+                        .build();
+                userRepository.save(normalUser);
             }
         };
     }
