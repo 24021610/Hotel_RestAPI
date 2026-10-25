@@ -74,3 +74,4 @@ Authorization: Bearer <TOKEN_VỪA_LẤY>
 | **5. Enum sai giá trị** | `POST /rooms` | Token `ADMIN` | `{"number": "102", "noOfPerson": 2, "type": "INVALID_TYPE", "price": 100.0}` | **HTTP 400 Bad Request**<br>`"code": 1001, "message": "Invalid value for enum field"` |
 | **6. JSON sai cú pháp** | `POST /rooms` | Token `ADMIN` | `{"number": "103",` (JSON hỏng) | **HTTP 400 Bad Request**<br>`"code": 1001, "message": "Malformed JSON request or invalid field format"` |
 | **7. Không truyền Token** | `GET /rooms` hoặc `POST /rooms` | Không có Header | None | **HTTP 401 Unauthorized**<br>`"code": 1006, "message": "Unauthenticated"` |
+
