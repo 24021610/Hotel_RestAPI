@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import com.nimbusds.jose.*;
 
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -45,7 +46,7 @@ public class AuthenticationService {
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
-        JWSVerifier verifier = new MACVerifier(signerKey.getBytes());
+        JWSVerifier verifier = new MACVerifier(signerKey.getBytes(StandardCharsets.UTF_8));
         SignedJWT signedJWT = SignedJWT.parse(token);
         var verifiedJWT = signedJWT.verify(verifier);
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -80,7 +81,7 @@ public class AuthenticationService {
         Payload payload  = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);
         try {
-            jwsObject.sign(new MACSigner(signerKey.getBytes()));
+            jwsObject.sign(new MACSigner(signerKey.getBytes(StandardCharsets.UTF_8)));
             return jwsObject.serialize();
         } catch (JOSEException e) {
             throw new RuntimeException(e);
