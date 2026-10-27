@@ -67,7 +67,7 @@ Authorization: Bearer <TOKEN_VỪA_LẤY>
 
 | Kịch bản test | Method & URL | Header Auth | Body gửi lên | Kết quả kỳ vọng |
 | :--- | :--- | :--- | :--- | :--- |
-| **1. User thường gọi CUD phòng** | `POST /rooms` hoặc `DELETE /rooms/{id}` | Token `USER` | Bất kỳ | **HTTP 403 Forbidden**<br>`"code": 1006, "message": "Unauthorized"` |
+| **1. User thường gọi CUD phòng** | `POST /rooms` hoặc `DELETE /rooms/{id}` | Token `USER` | Bất kỳ | **HTTP 403 Forbidden**<br>`"code": 1023, "message": "Unauthorized"` |
 | **2. Admin tạo phòng thành công** | `POST /rooms` | Token `ADMIN` | `{"number": "101", "noOfPerson": 2, "type": "SINGLE", "price": 100.0}` | **HTTP 200 OK**<br>Trả về thông tin phòng đã tạo |
 | **3. Xóa phòng đang có khách** | `DELETE /rooms/{id}` (phòng có `occupied = true`) | Token `ADMIN` | None | **HTTP 400 Bad Request**<br>`"code": 1022, "message": "Cannot delete room that is currently occupied"` |
 | **4. Xóa phòng trống bình thường** | `DELETE /rooms/{id}` (phòng có `occupied = false`) | Token `ADMIN` | None | **HTTP 200 OK**<br>`"message": "Room deleted successfully"` |
