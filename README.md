@@ -37,21 +37,30 @@ Dự án áp dụng mô hình **Layered Architecture** và tổ chức mã ngu�
 
 ## Chức năng nghiệp vụ
 
-### 1. Quản lý Tài khoản (Auth & Users)
-* Đăng ký tài khoản khách hàng mới(tên tài khoản độc nhất, không trùng lặp, mật khẩu ít nhất 6 ký tự).
-* Đăng nhập và cấp phát Bearer Token JWT khi đăng nhập thành công.
-* Xem và cập nhật thông tin cá nhân.
-* Phân quyền Admin: Quản lý danh sách toàn bộ người dùng trong hệ thống.
+### 1. Quản lý tài khoản (Authentication & Users)
+- Đăng ký tài khoản, kiểm tra username trùng lặp và mã hóa mật khẩu.
+- Đăng nhập, cấp JWT và xác thực token.
+- Xem, cập nhật thông tin cá nhân.
+- **ADMIN:** Xem danh sách, tìm kiếm, cập nhật, phân quyền và xóa tài khoản người dùng.
 
-### 2. Quản lý Kho phòng (Rooms)
-* Tra cứu, lọc và liệt kê danh sách phòng trống theo tiêu chí.
-* Phân quyền Admin: Toàn quyền CRUD (Thêm, sửa thông tin, ngưng kinh doanh) đối với từng phòng.
+### 2. Quản lý phòng (Rooms)
+- Xem danh sách, tra cứu phòng theo ID hoặc số phòng.
+- Lọc phòng theo loại, giá, sức chứa và tình trạng phòng.
+- **ADMIN:** Thêm, sửa, xóa phòng và quản lý trạng thái kinh doanh.
 
-### 3. Nghiệp vụ Đặt phòng (Bookings)
-* Tạo đơn đặt phòng (tự động nhận diện User thông qua JWT).
-* Tự động tính toán tổng chi phí dựa trên `basePrice` và số đêm lưu trú thực tế.
-* **Xử lý chống chồng chéo (Conflict Validation)**: Tự động kiểm tra khoảng thời gian `checkIn` - `checkOut`, ngăn chặn việc đặt trùng phòng tại cùng một thời điểm.
-* Hỗ trợ hủy đặt phòng.
+### 3. Quản lý đặt phòng (Bookings)
+- Tạo đơn đặt phòng, tự động xác định người đặt qua JWT.
+- Tính tổng chi phí theo giá phòng và số đêm lưu trú.
+- Kiểm tra ngày lưu trú và tình trạng phòng, ngăn chặn đặt phòng trùng thời gian.
+- Xem danh sách, chi tiết và hủy đơn đặt phòng của bản thân.
+- **ADMIN:** Xem, tìm kiếm, xác nhận, từ chối, hủy và quản lý trạng thái các đơn đặt phòng.
+
+### 4. Quy tắc nghiệp vụ
+- Người dùng chỉ được quản lý thông tin và đơn đặt phòng thuộc quyền của mình.
+- Chỉ ADMIN được thực hiện các thao tác quản trị tài khoản, phòng và đặt phòng.
+- Không cho phép đặt phòng có ngày không hợp lệ, phòng không khả dụng hoặc đơn đặt phòng bị trùng lịch.
+- Không cho phép hủy đơn đã hủy hoặc chuyển trạng thái đơn không hợp lệ.
+- Không cho phép xóa dữ liệu làm ảnh hưởng đến tính toàn vẹn của lịch sử đặt phòng.
 
 ---
 
