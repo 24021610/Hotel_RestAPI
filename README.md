@@ -105,6 +105,58 @@ Java 17+ · Spring Boot 3 · Spring Security · Spring Data JPA (Hibernate) · O
 - Không cho phép xóa dữ liệu làm ảnh hưởng đến tính toàn vẹn của lịch sử đặt phòng.
 
 ---
+## Danh sách Endpoint 
+### 1. Xác thực (Authentication)
+| Method | Endpoint | Quyền | Mô tả |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/auth/token` | Public | Đăng nhập và nhận JWT token |
+| `POST` | `/auth/introspect` | Public | Xác thực tính hợp lệ của Token |
+
+### 2. Người dùng (Users)
+| Method | Endpoint | Quyền | Mô tả |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/users` | Public | Đăng ký tài khoản người dùng |
+| `GET` | `/users` | `ADMIN` | Lấy toàn bộ danh sách người dùng |
+| `GET` | `/users/myInfo` | Authenticated | Lấy thông tin tài khoản hiện tại |
+| `GET` | `/users/{userId}` | Authenticated | Lấy thông tin người dùng theo ID |
+| `PUT` | `/users/{userId}` | Authenticated | Cập nhật thông tin cá nhân |
+| `DELETE`| `/users/{userId}` | `ADMIN` | Xóa người dùng |
+
+### 3. Phòng khách sạn (Rooms)
+| Method | Endpoint | Quyền | Mô tả |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/rooms` | Public | Xem danh sách các phòng |
+| `GET` | `/rooms/{roomId}`| Public | Xem chi tiết phòng theo ID |
+| `POST` | `/rooms` | `ADMIN` | Thêm phòng mới |
+| `PUT` | `/rooms/{roomId}`| `ADMIN` | Cập nhật thông tin phòng |
+| `DELETE`| `/rooms/{roomId}`| `ADMIN` | Xóa phòng |
+
+### 4. Đặt phòng (Bookings)
+| Method | Endpoint | Quyền | Mô tả |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/bookings` | Authenticated | Đặt phòng mới |
+| `GET` | `/bookings` | Authenticated | Xem danh sách đặt phòng |
+
+---
+
+## 🛠 Chuẩn Format Phản hồi
+
+
+```json
+{
+  "code": 1000,
+  "message": "Thành công",
+  "result": { ... }
+}
+```
+
+Trong trường hợp có lỗi nghiệp vụ:
+```json
+{
+  "code": 1001,
+  "message": "User not existed"
+}
+```
 
 ## Tài liệu API (Swagger UI)
 
