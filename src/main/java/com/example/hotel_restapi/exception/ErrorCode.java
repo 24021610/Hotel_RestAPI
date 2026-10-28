@@ -11,8 +11,8 @@ public enum ErrorCode {
     INVALID_PASSWORD(1004, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(1005, "User not existed", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    UNAUTHORIZED(1006, "Unauthorized", HttpStatus.FORBIDDEN),
-    INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+    UNAUTHORIZED(1023, "Unauthorized", HttpStatus.FORBIDDEN),
+
     ROOM_EXISTED(1007, "Room number already exists", HttpStatus.BAD_REQUEST),
     ROOM_NOT_EXISTED(1008, "Room not found", HttpStatus.NOT_FOUND),
     ROOM_UPDATE_EMPTY(1009, "At least one room field must be provided", HttpStatus.BAD_REQUEST),
@@ -28,6 +28,7 @@ public enum ErrorCode {
     BOOKING_ROOM_UNAVAILABLE(1019, "Room is already booked for the requested period", HttpStatus.CONFLICT),
     BOOKING_NOT_EXISTED(1020, "Booking not found", HttpStatus.NOT_FOUND),
     BOOKING_ALREADY_CANCELLED(1021, "Booking is already cancelled", HttpStatus.CONFLICT),
+    ROOM_CANNOT_DELETE_OCCUPIED(1022, "Cannot delete room that is currently occupied", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

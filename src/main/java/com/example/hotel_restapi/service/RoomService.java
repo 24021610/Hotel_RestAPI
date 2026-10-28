@@ -1,8 +1,8 @@
-
 package com.example.hotel_restapi.service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.example.hotel_restapi.dto.request.RoomCreationRequest;
@@ -26,7 +26,11 @@ public class RoomService {
     RoomRepository roomRepository;
     RoomMapper roomMapper;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RoomResponse createRoom(RoomCreationRequest request) {
+        if (request.getNumber() == null || request.getNumber().isBlank()) {
+            throw new AppException(ErrorCode.ROOM_NUMBER_REQUIRED);
+        }
         String number = request.getNumber().trim();
 
         if (roomRepository.existsByNumber(number)) {
@@ -53,6 +57,9 @@ public class RoomService {
     }
 
     public RoomResponse getRoomByNumber(String number) {
+        if (number == null || number.isBlank()) {
+            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
+        }
         Room room = roomRepository.findByNumber(number.trim())
                 .orElseThrow(
                         () -> new AppException(ErrorCode.ROOM_NOT_EXISTED));
@@ -74,6 +81,7 @@ public class RoomService {
                 .toList();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RoomResponse updateRoom(
             Long id,
             RoomUpdateRequest request) {
@@ -104,8 +112,12 @@ public class RoomService {
                 roomRepository.save(room));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteRoom(Long id) {
         Room room = findRoom(id);
+        if (room.isOccupied()) {
+            throw new AppException(ErrorCode.ROOM_CANNOT_DELETE_OCCUPIED);
+        }
         roomRepository.delete(room);
     }
 
