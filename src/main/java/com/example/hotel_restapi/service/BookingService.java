@@ -82,10 +82,33 @@ public class BookingService {
     }
 
     @Transactional(readOnly = true)
+    public List<BookingResponse> getBookings(String username, boolean admin) {
+        if (admin) {
+            return bookingRepository.findAll()
+                    .stream()
+                    .map(this::toBookingResponse)
+                    .toList();
+        }
+
+        return getMyBookings(username);
+    }
+
+    @Transactional(readOnly = true)
     public BookingResponse getBookingById(Long id, String username) {
         return bookingRepository.findByIdAndUserUsername(id, username)
                 .map(this::toBookingResponse)
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+    }
+
+    @Transactional(readOnly = true)
+    public BookingResponse getBookingById(Long id, String username, boolean admin) {
+        if (admin) {
+            return bookingRepository.findById(id)
+                    .map(this::toBookingResponse)
+                    .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+        }
+
+        return getBookingById(id, username);
     }
 
     @Transactional
@@ -93,6 +116,21 @@ public class BookingService {
         Booking booking = bookingRepository.findByIdAndUserUsername(id, username)
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
 
+        return cancelBooking(booking);
+    }
+
+    @Transactional
+    public BookingResponse cancelBooking(Long id, String username, boolean admin) {
+        Booking booking = admin
+                ? bookingRepository.findById(id)
+                        .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED))
+                : bookingRepository.findByIdAndUserUsername(id, username)
+                        .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+
+        return cancelBooking(booking);
+    }
+
+    private BookingResponse cancelBooking(Booking booking) {
         if (booking.getStatus() == BookingStatus.CANCELLED) {
             throw new AppException(ErrorCode.BOOKING_ALREADY_CANCELLED);
         }
