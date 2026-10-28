@@ -1,4 +1,3 @@
-
 package com.example.hotel_restapi.service;
 
 import java.util.List;
@@ -29,6 +28,9 @@ public class RoomService {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     public RoomResponse createRoom(RoomCreationRequest request) {
+        if (request.getNumber() == null || request.getNumber().isBlank()) {
+            throw new AppException(ErrorCode.ROOM_NUMBER_REQUIRED);
+        }
         String number = request.getNumber().trim();
 
         if (roomRepository.existsByNumber(number)) {
@@ -55,6 +57,9 @@ public class RoomService {
     }
 
     public RoomResponse getRoomByNumber(String number) {
+        if (number == null || number.isBlank()) {
+            throw new AppException(ErrorCode.ROOM_NOT_EXISTED);
+        }
         Room room = roomRepository.findByNumber(number.trim())
                 .orElseThrow(
                         () -> new AppException(ErrorCode.ROOM_NOT_EXISTED));

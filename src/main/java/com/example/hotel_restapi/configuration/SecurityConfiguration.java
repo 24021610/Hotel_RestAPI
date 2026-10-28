@@ -30,7 +30,7 @@ import java.util.Arrays;
 public class SecurityConfiguration {
 
     private final String[] PUBLIC_ENDPOINTS = {
-            "/users", "/auth", "/auth/introspect", "/auth/login"
+            "/users", "/auth/introspect", "/auth/login"
     };
 
     @Value("${jwt.signerKey}")

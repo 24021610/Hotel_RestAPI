@@ -1,5 +1,14 @@
 package com.example.hotel_restapi.service;
 
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.StringJoiner;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.example.hotel_restapi.dto.request.AuthenticationRequest;
 import com.example.hotel_restapi.dto.request.IntrospectRequest;
@@ -9,65 +18,78 @@ import com.example.hotel_restapi.entity.User;
 import com.example.hotel_restapi.exception.AppException;
 import com.example.hotel_restapi.exception.ErrorCode;
 import com.example.hotel_restapi.repository.UserRepository;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
-import lombok.*;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import com.nimbusds.jose.*;
-
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-
 public class AuthenticationService {
+
     @NonFinal
     @Value("${jwt.signerKey}")
     String signerKey;
 
     UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
 
+    public IntrospectResponse introspect(IntrospectRequest request) {
+        if (request == null || request.getToken() == null || request.getToken().isBlank()) {
+            return IntrospectResponse.builder().valid(false).build();
+        }
 
+        boolean isValid = false;
+        try {
+            JWSVerifier verifier = new MACVerifier(signerKey.getBytes(StandardCharsets.UTF_8));
+            SignedJWT signedJWT = SignedJWT.parse(request.getToken().trim());
+            boolean verified = signedJWT.verify(verifier);
+            Date expiryTime = signedJWT.getJWTClaimsSet() != null
+                    ? signedJWT.getJWTClaimsSet().getExpirationTime()
+                    : null;
+            isValid = verified && expiryTime != null && expiryTime.after(new Date());
+        } catch (Exception e) {
+            isValid = false;
+        }
 
-    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
-        var token = request.getToken();
-        JWSVerifier verifier = new MACVerifier(signerKey.getBytes(StandardCharsets.UTF_8));
-        SignedJWT signedJWT = SignedJWT.parse(token);
-        var verifiedJWT = signedJWT.verify(verifier);
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
-
-        return IntrospectResponse.builder().
-                valid(verifiedJWT && expiryTime.after(new Date())).
-                build();
+        return IntrospectResponse.builder()
+                .valid(isValid)
+                .build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        var user = userRepository.findByUsername(authenticationRequest.getUsername()).orElseThrow(()
-                -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if (authenticationRequest == null
+                || authenticationRequest.getUsername() == null
+                || authenticationRequest.getUsername().isBlank()
+                || authenticationRequest.getPassword() == null
+                || authenticationRequest.getPassword().isBlank()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        var user = userRepository.findByUsername(authenticationRequest.getUsername().trim())
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
         var password = authenticationRequest.getPassword();
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        boolean authenticated = encoder.matches(password, user.getPassword());
+        boolean authenticated = passwordEncoder.matches(password, user.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-        } else {
-            var token = generateJWTToken(user);
-            return AuthenticationResponse.builder().token(token).authenticated(true).build();
         }
+
+        var token = generateJWTToken(user);
+        return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
     private String generateJWTToken(User user) {
@@ -78,7 +100,7 @@ public class AuthenticationService {
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()))
                 .claim("scope", buildScope(user))
                 .build();
-        Payload payload  = new Payload(jwtClaimsSet.toJSONObject());
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
         JWSObject jwsObject = new JWSObject(header, payload);
         try {
             jwsObject.sign(new MACSigner(signerKey.getBytes(StandardCharsets.UTF_8)));
