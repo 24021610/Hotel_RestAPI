@@ -46,7 +46,9 @@ public class BookingController {
     public ApiResponse<List<BookingResponse>> getMyBookings(
             Authentication authentication) {
         return ApiResponse.<List<BookingResponse>>builder()
-                .result(bookingService.getMyBookings(authentication.getName()))
+                .result(bookingService.getBookings(
+                        authentication.getName(),
+                        isAdmin(authentication)))
                 .build();
     }
 
@@ -55,7 +57,10 @@ public class BookingController {
             @PathVariable Long id,
             Authentication authentication) {
         return ApiResponse.<BookingResponse>builder()
-                .result(bookingService.getBookingById(id, authentication.getName()))
+                .result(bookingService.getBookingById(
+                        id,
+                        authentication.getName(),
+                        isAdmin(authentication)))
                 .build();
     }
 
@@ -64,7 +69,15 @@ public class BookingController {
             @PathVariable Long id,
             Authentication authentication) {
         return ApiResponse.<BookingResponse>builder()
-                .result(bookingService.cancelBooking(id, authentication.getName()))
+                .result(bookingService.cancelBooking(
+                        id,
+                        authentication.getName(),
+                        isAdmin(authentication)))
                 .build();
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ADMIN".equals(authority.getAuthority()));
     }
 }
