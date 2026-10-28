@@ -13,16 +13,58 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 
 ---
 
-## Kiến trúc hệ thống
+## Kiến trúc 3 tầng (Layered Architecture)
 
-Dự án áp dụng mô hình **Layered Architecture** và tổ chức mã nguồn theo khía cạnh kỹ thuật (**Package by Layer**). Cấu trúc trong `com.example.hotel_restapi` gồm các package chính:
+Ứng dụng được thiết kế phân tầng rõ ràng nhằm đảm bảo tính độc lập, bảo mật và khả năng mở rộng:
 
-* `controller` **(API Layer)**: Tiếp nhận HTTP Request và trả về HTTP Response (`AuthenticationController`, `RoomController`, `UserController`,...). Định tuyến luồng dữ liệu, không chứa logic nghiệp vụ.
-* `service` **(Business Logic Layer)**: Xử lý toàn bộ nghiệp vụ cốt lõi (`AuthenticationService`, `RoomService`, `UserService`,...). Hoàn toàn độc lập, không phụ thuộc vào framework Web hay chi tiết Database.
-* `repository` **(Data Access Layer)**: Tương tác với cơ sở dữ liệu MySQL thông qua Spring Data JPA (`RoomRepository`, `UserRepository`,...).
-* `entity` & `enums`: Định nghĩa các đối tượng ánh xạ trực tiếp với bảng trong Database (`Room`, `User`,...) và các hằng số trạng thái (`Role`, `RoomType`,...).
-* `dto` & `mapper`: Tách biệt dữ liệu nhận vào (Request) và trả về (Response) thông qua Data Transfer Object (DTO). Sử dụng mapper (`RoomMapper`, `UserMapper`,...) để che giấu cấu trúc database khỏi client.
-* `exception`: Xử lý lỗi tập trung qua `@ControllerAdvice` (`GlobalExceptionHandler`) cùng mã lỗi chuẩn hóa (`ErrorCode`, `AppException`), đảm bảo format phản hồi đồng nhất.
+```text
+[ Tầng Giao tiếp (Presentation / API Layer) ]
+ ├── Security Filter Chain & JWT EntryPoint (configuration/SecurityConfiguration.java, JwtAuthenticationEntryPoint.java)
+ ├── REST Controllers (controller/AuthenticationController.java, UserController.java, RoomController.java, BookingController.java)
+ └── DTOs & Chuẩn hóa Response (dto/request/*, dto/response/*, ApiResponse.java)
+        ↓
+[ Tầng Nghiệp vụ (Business Logic / Service Layer) ]
+ ├── Use Case Services (service/AuthenticationService.java, UserService.java, RoomService.java, BookingService.java)
+ ├── Object Mapping - MapStruct (mapper/UserMapper.java, RoomMapper.java)
+ └── Kiểm soát lỗi tập trung (exception/GlobalExceptionHandler.java, AppException.java, ErrorCode.java)
+        ↓
+[ Tầng Dữ liệu & Hạ tầng (Data Access / Persistence Layer) ]
+ ├── Spring Data JPA Repositories (repository/UserRepository.java, RoomRepository.java, BookingRepository.java)
+ └── JPA Entities & Enums (entity/User.java, Room.java, Booking.java, enums/Role.java, RoomType.java, BookingStatus.java)
+        ↓
+      Relational Database (MySQL)
+```
+
+* **Presentation / API Layer**: Tiếp nhận HTTP request, xác thực token qua bộ lọc bảo mật trước khi  vào Controller và chuẩn hóa toàn bộ đầu ra qua `ApiResponse`.
+* **Business Logic Layer**: Xử lý toàn bộ quy tắc nghiệp vụ cốt lõi (kiểm tra trùng lịch đặt phòng, phân quyền người dùng, cấp phát/kiểm tra JWT), tự động ánh xạ dữ liệu giữa DTO và Entity ở thời điểm biên dịch (compile-time) bằng MapStruct.
+* **Persistence Layer**: Quản lý ánh xạ tới cơ sở dữ liệu và đảm bảo tính toàn vẹn dữ liệu và mối quan hệ giữa các bảng `User`, `Room` và `Booking`.
+
+---
+
+## Tổ chức mã nguồn và công nghệ
+
+```text
+src/main/java/com/example/hotel_restapi/
+├── configuration/          Cấu hình Spring Security, bộ lọc JWT, khởi tạo dữ liệu nền (InitConfiguration)
+├── controller/             4 REST Controller: Authentication, User, Room, Booking
+├── dto/request/            Schema đầu vào, validation và wrapper chuẩn hóa ApiResponse
+├── dto/response/           Schema dữ liệu trả về cho Client (ẩn thông tin nhạy cảm)
+├── entity/                 Thực thể ORM: User, Room, Booking
+├── enums/                  Định nghĩa hằng số: Role, RoomType, BookingStatus
+├── exception/              AppException, bộ mã lỗi ErrorCode và GlobalExceptionHandler
+├── mapper/                 Interface MapStruct chuyển đổi hai chiều giữa Entity và DTO
+├── repository/             Giao tiếp cơ sở dữ liệu qua Spring Data JPA Repositories
+├── service/                4 service xử lý nghiệp vụ: xác thực/JWT, quản lý người dùng, phòng và đặt phòng
+└── HotelRestApiApplication.java  Điểm khởi chạy ứng dụng Spring Boot
+
+src/main/resources/
+└── application.properties  Cấu hình kết nối Database, cổng dịch vụ, khóa bí mật JWT (Secret Key)
+src/test/                   Unit test và kiểm thử tích hợp cho ứng dụng
+Dockerfile                  Đóng gói ứng dụng thành Docker Image độc lập
+pom.xml                     Quản lý dependencies, cấu hình build Maven và plugin MapStruct/Lombok
+```
+
+Java 17+ · Spring Boot 3 · Spring Security · Spring Data JPA (Hibernate) · OAuth2 Resource Server / Nimbus JOSE + JWT · BCrypt Password Encoder · MapStruct · Lombok · MySQL · Maven Wrapper (`mvnw`) · Docker. Các thư viện và phiên bản được quản lý tập trung trong `pom.xml`.
 * `configuration`: Chứa cấu hình bảo mật (Spring Security, JWT) và khởi tạo các Bean hệ thống.
 
 ---
