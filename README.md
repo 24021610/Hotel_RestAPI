@@ -4,12 +4,15 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 
 ---
 
-## 📑 Mục lục
-- [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
-- [Bảo mật & Xác thực](#-bảo-mật--xác-thực)
-- [Chức năng nghiệp vụ](#-chức-năng-nghiệp-vụ)
-- [Tài liệu API (Swagger UI)](#-tài-liệu-api-swagger-ui)
-- [Cài đặt & Triển khai (Docker)](#-cài-đặt--triển-khai-docker)
+## Mục lục
+- [Kiến trúc 3 tầng (Layered Architecture)](#kiến-trúc-3-tầng-layered-architecture)
+- [Tổ chức mã nguồn và công nghệ](#tổ-chức-mã-nguồn-và-công-nghệ)
+- [Bảo mật & Xác thực](#bảo-mật--xác-thực)
+- [Chức năng nghiệp vụ](#chức-năng-nghiệp-vụ)
+- [Danh sách Endpoint](#danh-sách-endpoint)
+- [Chuẩn Format Phản hồi](#chuẩn-format-phản-hồi)
+- [Tài liệu API (Swagger UI)](#tài-liệu-api-swagger-ui)
+- [Cài đặt & Triển khai (Docker)](#cài-đặt--triển-khai-docker)
 
 ---
 
@@ -139,7 +142,7 @@ Java 17+ · Spring Boot 3 · Spring Security · Spring Data JPA (Hibernate) · O
 
 ---
 
-## 🛠 Chuẩn Format Phản hồi
+## Chuẩn Format Phản hồi
 
 
 ```json
