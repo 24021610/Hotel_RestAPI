@@ -3,6 +3,7 @@ package com.example.hotel_restapi.service;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.example.hotel_restapi.dto.request.RoomCreationRequest;
@@ -26,6 +27,7 @@ public class RoomService {
     RoomRepository roomRepository;
     RoomMapper roomMapper;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RoomResponse createRoom(RoomCreationRequest request) {
         String number = request.getNumber().trim();
 
@@ -74,6 +76,7 @@ public class RoomService {
                 .toList();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RoomResponse updateRoom(
             Long id,
             RoomUpdateRequest request) {
@@ -104,6 +107,7 @@ public class RoomService {
                 roomRepository.save(room));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteRoom(Long id) {
         Room room = findRoom(id);
         roomRepository.delete(room);

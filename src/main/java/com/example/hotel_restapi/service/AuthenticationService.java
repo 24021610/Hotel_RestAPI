@@ -37,8 +37,6 @@ public class AuthenticationService {
 
     UserRepository userRepository;
 
-
-
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
         JWSVerifier verifier = new MACVerifier(key.getBytes());

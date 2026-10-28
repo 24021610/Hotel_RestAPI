@@ -63,7 +63,6 @@ public class UserService {
                 userRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
     }
 
-    @PostAuthorize("hasAuthority('ADMIN')")
     public UserResponse getUserByUsername(String username) {
         return userMapper.toUserResponse(
                 userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
@@ -77,7 +76,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteUser(String id) {
         userRepository.deleteById(id);
 
