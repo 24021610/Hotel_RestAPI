@@ -1,7 +1,6 @@
 # Hotel Reservation API Service
 
-Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đặt phòng khách sạn. Dự án tuân thủ nghiêm ngặt mô hình kiến trúc phân tầng (Layered Architecture) và chú trọng tối ưu các thuộc tính chất lượng (Quality Attributes) của phần mềm.
-
+Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đặt phòng khách sạn.
 ---
 
 ## Mục lục
