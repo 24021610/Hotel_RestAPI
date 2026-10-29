@@ -189,3 +189,14 @@ docker compose up --build -d
 ```bash
 git clone [https://github.com/your-username/hotel-booking-backend.git](https://github.com/your-username/hotel-booking-backend.git)
 cd hotel-booking-backend
+
+```
+## Vấn đề tồn đọng & Hướng phát triển
+1. Vấn đề hiện tại:
+- Chưa có quản lý blacklist token (JWT vẫn còn hạn sau đăng xuất).
+- Chưa có cơ chế khóa dữ liệu triệt để khi nhiều người cùng đặt 1 phòng.
+2. Hướng phát triển:
+- Tích hợp cổng thanh toán trực tuyến.
+- Bổ sung Redis Cache giúp tăng tốc truy vấn danh sách phòng.
+- Tích hợp OAuth2 (Đăng nhập qua Google).
+- Bổ sung phân trang (Pagination) và giám sát hệ thống (Prometheus + Grafana).
