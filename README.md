@@ -63,11 +63,11 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
  ├── Spring Data JPA Repositories
  └── JPA Entities & Enums
         ↓
-      Relational Database (MySQL)
+      Relational Database
 ```
 
 * **Presentation / API Layer**: Tiếp nhận HTTP request, xác thực token và chuẩn hóa toàn bộ đầu ra qua `ApiResponse`.
-* **Business Logic Layer**: Xử lý toàn bộ quy tắc nghiệp vụ cốt lõi, tự động ánh xạ dữ liệu giữa DTO và Entity ở thời điểm biên dịch (compile-time) bằng MapStruct.
+* **Business Logic Layer**: Xử lý toàn bộ quy tắc nghiệp vụ cốt lõi, tự động ánh xạ dữ liệu giữa DTO và Entity bằng MapStruct.
 * **Persistence Layer**: Quản lý ánh xạ tới cơ sở dữ liệu.
 
 ---
