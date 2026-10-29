@@ -80,8 +80,8 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 src/main/java/com/example/hotel_restapi/
 ├── configuration/          Cấu hình Spring Security, bộ lọc JWT, khởi tạo dữ liệu
 ├── controller/             4 REST Controller
-├── dto/request/            Schema đầu vào, validation và wrapper chuẩn hóa ApiResponse
-├── dto/response/           Schema dữ liệu trả về cho Client
+├── dto/request/           
+├── dto/response/          
 ├── entity/                 TUser, Room, Booking
 ├── enums/                  Role, RoomType, BookingStatus
 ├── exception/              AppException, ErrorCode, GlobalExceptionHandler
