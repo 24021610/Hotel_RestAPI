@@ -169,10 +169,7 @@ Trong trường hợp có lỗi nghiệp vụ:
 
 ## Cài đặt & Triển khai Docker
 
-Hệ thống đã cấu hình sẵn `Dockerfile` và `docker-compose.yml` để đóng gói toàn bộ môi trường (App & MySQL Database).
-
-### Yêu cầu tiên quyết
-* Máy tính đã cài đặt [Docker](https://docs.docker.com/get-docker/) và Docker Compose.
+Hệ thống đã cấu hình sẵn `Dockerfile` và `docker-compose.yml` để đóng gói toàn bộ môi trường.
 
 ### Các bước thực hiện
 
