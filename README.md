@@ -67,7 +67,7 @@ Dockerfile                  Đóng gói ứng dụng thành Docker Image độc 
 pom.xml                     Quản lý dependencies, cấu hình build Maven và plugin MapStruct/Lombok
 ```
 
-Java 17+ · Spring Boot 3 · Spring Security · Spring Data JPA (Hibernate) · OAuth2 Resource Server / Nimbus JOSE + JWT · BCrypt Password Encoder · MapStruct · Lombok · MySQL · Maven Wrapper (`mvnw`) · Docker. Các thư viện và phiên bản được quản lý tập trung trong `pom.xml`.
+Java 17+ · Spring Boot 4.1.1 · Spring Security · Spring Data JPA (Hibernate) · OAuth2 Resource Server / Nimbus JOSE + JWT · BCrypt Password Encoder · MapStruct · Lombok · MySQL · Maven Wrapper (`mvnw`) · Docker. Các thư viện và phiên bản được quản lý tập trung trong `pom.xml`.
 * `configuration`: Chứa cấu hình bảo mật (Spring Security, JWT) và khởi tạo các Bean hệ thống.
 
 ---
@@ -120,7 +120,6 @@ Java 17+ · Spring Boot 3 · Spring Security · Spring Data JPA (Hibernate) · O
 | :--- | :--- | :--- | :--- |
 | `POST` | `/users` | Public | Đăng ký tài khoản người dùng |
 | `GET` | `/users` | `ADMIN` | Lấy toàn bộ danh sách người dùng |
-| `GET` | `/users/myInfo` | Authenticated | Lấy thông tin tài khoản hiện tại |
 | `GET` | `/users/{userId}` | Authenticated | Lấy thông tin người dùng theo ID |
 | `PUT` | `/users/{userId}` | Authenticated | Cập nhật thông tin cá nhân |
 | `DELETE`| `/users/{userId}` | `ADMIN` | Xóa người dùng |
