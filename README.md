@@ -1,6 +1,8 @@
 # Hotel Reservation API Service
 
-Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đặt phòng khách sạn.
+Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đặt phòng khách sạn. Khách đăng ký, đăng nhập, xem phòng còn trống và quản lý đơn đặt phòng của chính mình.
+
+
 ---
 
 ## Mục lục
