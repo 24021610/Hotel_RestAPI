@@ -25,8 +25,7 @@ trúc phần mềm.
 - [Build, test và chạy ứng dụng](#build-test-và-chạy-ứng-dụng)
 - [Tài liệu API](#tài-liệu-api)
 - [Xác thực và phân quyền](#xác-thực-và-phân-quyền)
-- [Luồng demo thuyết trình](#luồng-demo-thuyết-trình)
-- [Giới hạn hiện tại và Phase 2](#giới-hạn-hiện-tại-và-phase-2)
+- [Giới hạn hiện tại](#giới-hạn-hiện-tại)
 
 ## Tổng quan dự án
 
@@ -371,7 +370,7 @@ Content-Type: application/json
 
 Initializer chỉ tạo tài khoản này khi username `admin` chưa tồn tại.
 
-Response mẫu:
+Ví dụ Response:
 
 ```json
 {
