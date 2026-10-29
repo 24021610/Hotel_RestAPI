@@ -4,7 +4,7 @@ Hệ thống RESTful API Backend phục vụ nghiệp vụ quản lý khách s�
 
 ---
 
-## 📑 Mục lục
+## Mục lục
 - [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
 - [Bảo mật & Xác thực](#-bảo-mật--xác-thực)
 - [Chức năng nghiệp vụ thực tế](#-chức-năng-nghiệp-vụ-thực-tế)
@@ -20,7 +20,7 @@ Hệ thống RESTful API Backend phục vụ nghiệp vụ quản lý khách s�
 
 ---
 
-## 🏗️ Kiến trúc hệ thống
+## Kiến trúc hệ thống
 
 Dự án tổ chức mã nguồn theo mô hình kiến trúc phân tầng (**Layered Architecture / Package by Layer**) trong package `com.example.hotel_restapi`:
 
@@ -34,7 +34,7 @@ Dự án tổ chức mã nguồn theo mô hình kiến trúc phân tầng (**Lay
 
 ---
 
-## 🔒 Bảo mật & Xác thực
+## Bảo mật & Xác thực
 
 * **Cơ chế xác thực**: Sử dụng JSON Web Token (JWT) với thuật toán HMAC-SHA256 (`HS256`).
 * **Quản lý khóa ký (Signing Key)**: Khóa ký được nạp thông qua `@Value("${jwt.signerKey}")`, hỗ trợ cấu hình qua biến môi trường `JWT_SIGNER_KEY`. Toàn bộ quá trình ký và giải mã token được ép kiểu tường minh `StandardCharsets.UTF_8` với kiểm tra độ dài tối thiểu 32 bytes (256 bits).
@@ -48,7 +48,7 @@ Dự án tổ chức mã nguồn theo mô hình kiến trúc phân tầng (**Lay
 
 ---
 
-## 🚀 Chức năng nghiệp vụ thực tế
+## Chức năng nghiệp vụ thực tế
 
 ### 1. Quản lý Tài khoản (Auth & Users)
 * **Đăng nhập (`POST /auth/login`)**: Xác thực tài khoản qua username/password mã hóa BCrypt, trả về JWT Token chứa danh sách roles.
@@ -97,7 +97,7 @@ Dự án tổ chức mã nguồn theo mô hình kiến trúc phân tầng (**Lay
 
 ---
 
-## ⚙️ Cài đặt & Triển khai
+## Cài đặt & Triển khai
 
 ### 1. Cấu hình Môi trường Phát triển (Local Dev Profile)
 
@@ -159,7 +159,7 @@ docker run -d -p 8080:8080 --name hotel-api \
 
 ---
 
-## 🧪 Kiểm thử & Bằng chứng Xác minh
+## Kiểm thử & Bằng chứng Xác minh
 
 ### 1. Bộ Kiểm thử Tự động (17 Automated Tests)
 
@@ -223,7 +223,7 @@ Bảng dưới đây tổng hợp các hành vi API đã được kiểm chứng
 
 ---
 
-## 📋 Bảng Mã Lỗi Chuẩn Hóa (`ErrorCode`)
+## Bảng Mã Lỗi Chuẩn Hóa (`ErrorCode`)
 
 Dự án định nghĩa tập trung toàn bộ mã lỗi trong enum [`ErrorCode.java`](src/main/java/com/example/hotel_restapi/exception/ErrorCode.java), bảo đảm mỗi mã số là duy nhất:
 
@@ -256,7 +256,7 @@ Dự án định nghĩa tập trung toàn bộ mã lỗi trong enum [`ErrorCode.
 
 ---
 
-## ⚠️ Giới hạn Kỹ thuật & Khuyến nghị Vận hành
+## Giới hạn Kỹ thuật & Khuyến nghị Vận hành
 
 1. **Ràng buộc Duy nhất trên Database (Unique Constraint)**:
    - Entity `User` đã khai báo `@Column(unique = true)` và mã nguồn có sẵn script di chuyển schema [`scripts/migrations/manual_migration_uk_user_username.sql`](scripts/migrations/manual_migration_uk_user_username.sql).
