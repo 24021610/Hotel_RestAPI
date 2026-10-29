@@ -51,25 +51,25 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 
 ```text
 [ Tầng Giao tiếp (Presentation / API Layer) ]
- ├── Security Filter Chain & JWT EntryPoint (configuration/SecurityConfiguration.java, JwtAuthenticationEntryPoint.java)
- ├── REST Controllers (controller/AuthenticationController.java, UserController.java, RoomController.java, BookingController.java)
- └── DTOs & Chuẩn hóa Response (dto/request/*, dto/response/*, ApiResponse.java)
+ ├── Security Filter Chain & JWT EntryPoint
+ ├── REST Controllers
+ └── DTOs & Chuẩn hóa Response
         ↓
 [ Tầng Nghiệp vụ (Business Logic / Service Layer) ]
- ├── Use Case Services (service/AuthenticationService.java, UserService.java, RoomService.java, BookingService.java)
- ├── Object Mapping - MapStruct (mapper/UserMapper.java, RoomMapper.java)
- └── Kiểm soát lỗi tập trung (exception/GlobalExceptionHandler.java, AppException.java, ErrorCode.java)
+ ├── Use Case Services
+ ├── Object Mapping - MapStruct
+ └── Kiểm soát lỗi tập trung
         ↓
 [ Tầng Dữ liệu & Hạ tầng (Data Access / Persistence Layer) ]
- ├── Spring Data JPA Repositories (repository/UserRepository.java, RoomRepository.java, BookingRepository.java)
- └── JPA Entities & Enums (entity/User.java, Room.java, Booking.java, enums/Role.java, RoomType.java, BookingStatus.java)
+ ├── Spring Data JPA Repositories
+ └── JPA Entities & Enums
         ↓
       Relational Database (MySQL)
 ```
 
-* **Presentation / API Layer**: Tiếp nhận HTTP request, xác thực token qua bộ lọc bảo mật trước khi  vào Controller và chuẩn hóa toàn bộ đầu ra qua `ApiResponse`.
-* **Business Logic Layer**: Xử lý toàn bộ quy tắc nghiệp vụ cốt lõi (kiểm tra trùng lịch đặt phòng, phân quyền người dùng, cấp phát/kiểm tra JWT), tự động ánh xạ dữ liệu giữa DTO và Entity ở thời điểm biên dịch (compile-time) bằng MapStruct.
-* **Persistence Layer**: Quản lý ánh xạ tới cơ sở dữ liệu và đảm bảo tính toàn vẹn dữ liệu và mối quan hệ giữa các bảng `User`, `Room` và `Booking`.
+* **Presentation / API Layer**: Tiếp nhận HTTP request, xác thực token và chuẩn hóa toàn bộ đầu ra qua `ApiResponse`.
+* **Business Logic Layer**: Xử lý toàn bộ quy tắc nghiệp vụ cốt lõi, tự động ánh xạ dữ liệu giữa DTO và Entity ở thời điểm biên dịch (compile-time) bằng MapStruct.
+* **Persistence Layer**: Quản lý ánh xạ tới cơ sở dữ liệu.
 
 ---
 
@@ -77,16 +77,16 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 
 ```text
 src/main/java/com/example/hotel_restapi/
-├── configuration/          Cấu hình Spring Security, bộ lọc JWT, khởi tạo dữ liệu nền (InitConfiguration)
-├── controller/             4 REST Controller: Authentication, User, Room, Booking
+├── configuration/          Cấu hình Spring Security, bộ lọc JWT, khởi tạo dữ liệu
+├── controller/             4 REST Controller
 ├── dto/request/            Schema đầu vào, validation và wrapper chuẩn hóa ApiResponse
-├── dto/response/           Schema dữ liệu trả về cho Client (ẩn thông tin nhạy cảm)
-├── entity/                 Thực thể ORM: User, Room, Booking
-├── enums/                  Định nghĩa hằng số: Role, RoomType, BookingStatus
-├── exception/              AppException, bộ mã lỗi ErrorCode và GlobalExceptionHandler
-├── mapper/                 Interface MapStruct chuyển đổi hai chiều giữa Entity và DTO
-├── repository/             Giao tiếp cơ sở dữ liệu qua Spring Data JPA Repositories
-├── service/                4 service xử lý nghiệp vụ: xác thực/JWT, quản lý người dùng, phòng và đặt phòng
+├── dto/response/           Schema dữ liệu trả về cho Client
+├── entity/                 TUser, Room, Booking
+├── enums/                  Role, RoomType, BookingStatus
+├── exception/              AppException, ErrorCode, GlobalExceptionHandler
+├── mapper/                 Interface MapStruct
+├── repository/             Giao tiếp  qua Spring Data JPA Repositories
+├── service/                Xác thực/JWT, quản lý người dùng, phòng và đặt phòng
 └── HotelRestApiApplication.java  Điểm khởi chạy ứng dụng Spring Boot
 
 src/main/resources/
@@ -156,7 +156,7 @@ Java 17+ · Spring Boot 4.1.1 · Spring Security · Spring Data JPA (Hibernate) 
 Trong trường hợp có lỗi nghiệp vụ:
 ```json
 {
-  "code": 1001,
+  "code": 1005,
   "message": "User not existed"
 }
 ```
