@@ -104,7 +104,7 @@ Java 17+ · Spring Boot 4.1.1 · Spring Security · Spring Data JPA (Hibernate) 
 
 * **Cơ chế**: Sử dụng JSON Web Token (JWT) cho Authentication và Authorization.
 * **Xử lý tập trung**: Kiểm tra tính hợp lệ của Token và quyền hạn người dùng tại tầng Filter/Middleware của Spring Security.
-* **Mã nguồn tinh gọn (Clean Code)**: Tầng Controller sạch bóng code kiểm tra quyền thủ công; bảo vệ tài nguyên hoàn toàn qua các Annotation bảo mật (e.g. `@PreAuthorize`).
+* **Mã nguồn**: Tầng Controller kiểm tra quyền thủ công; bảo vệ tài nguyên hoàn toàn qua các Annotation bảo mật (e.g. `@PreAuthorize`).
 
 
 ---
