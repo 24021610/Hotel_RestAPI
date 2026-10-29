@@ -437,25 +437,14 @@ Các request còn lại yêu cầu bearer token hợp lệ. `@PreAuthorize` và
 
 ## Giới hạn hiện tại
 
-Các giới hạn của dự án:
+Các giới hạn trọng tâm của dự án:
 
-- `Room.occupied` là boolean được lưu trong database và không được cập nhật
-  khi tạo hoặc hủy booking. Vì vậy API available/occupied không tính khả dụng
-  theo một khoảng ngày cụ thể.
-- Chưa có endpoint check-in, check-out, thanh toán hoặc chuyển trạng thái
-  booking ngoài `CONFIRMED` và `CANCELLED`.
-- Chưa có cấu hình Swagger/OpenAPI.
-- Hiện chỉ có Spring context test và `BookingServiceTest`, chưa có MockMvc
-  test cho controller hoặc end-to-end API test.
-- `spring.jpa.hibernate.ddl-auto=update` và `spring.jpa.show-sql=true` phù hợp
-  hơn với môi trường phát triển.
-- Datasource và JWT settings mặc định nằm trong `application.properties`,
-  chưa có cơ chế quản lý secret riêng cho môi trường triển khai.
-- `AuthenticationService` chứa JWT signing key trong source, trong khi decoder
-  đọc `jwt.signerKey` từ configuration.
-- `UserUpdateRequest` có field `roles` và mapper hiện tại không ignore rõ ràng
-  field này.
-- Exception handler và error-code mapping cần được kiểm thử integration,
-  đặc biệt với JWT sai định dạng, JSON không hợp lệ và runtime exception.
-- Concurrency khi đặt phòng, index database, migration, deployment, monitoring
-  và performance chưa được đánh giá đầy đủ.
+**Quản lý đặt phòng:** Chưa đồng bộ trạng thái `Room.occupied` với lịch
+booking, nên chưa xác định được chính xác phòng còn trống theo từng khoảng
+ngày; các quy trình check-in, check-out và thanh toán cũng chưa được triển
+khai.
+
+**Bảo mật và cấu hình triển khai:** JWT signing key hiện được cấu hình từ hai
+nguồn khác nhau, trong đó một giá trị nằm trực tiếp trong
+`AuthenticationService`; dự án cũng chưa có cơ chế quản lý secret riêng cho
+từng môi trường.
