@@ -4,14 +4,14 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 ---
 
 ## Mục lục
-- [Kiến trúc 3 tầng (Layered Architecture)](#kiến-trúc-3-tầng-layered-architecture)
+- [Kiến trúc Layered Architecture](#kiến-trúc-3-tầng-layered-architecture)
 - [Tổ chức mã nguồn và công nghệ](#tổ-chức-mã-nguồn-và-công-nghệ)
 - [Bảo mật & Xác thực](#bảo-mật--xác-thực)
 - [Chức năng nghiệp vụ](#chức-năng-nghiệp-vụ)
 - [Danh sách Endpoint](#danh-sách-endpoint)
 - [Chuẩn Format Phản hồi](#chuẩn-format-phản-hồi)
-- [Tài liệu API (Swagger UI)](#tài-liệu-api-swagger-ui)
-- [Cài đặt & Triển khai (Docker)](#cài-đặt--triển-khai-docker)
+- [Tài liệu API](#tài-liệu-api-swagger-ui)
+- [Cài đặt & Triển khai Docker](#cài-đặt--triển-khai-docker)
 
 ---
 
@@ -44,22 +44,22 @@ Hệ thống RESTful API Backend chuyên nghiệp phục vụ nghiệp vụ đ�
 
 ---
 
-## Kiến trúc 3 tầng (Layered Architecture)
+## Kiến trúc Layered Architecture
 
 Ứng dụng được thiết kế phân tầng rõ ràng nhằm đảm bảo tính độc lập, bảo mật và khả năng mở rộng:
 
 ```text
-[ Tầng Giao tiếp (Presentation / API Layer) ]
+[ Tầng Giao tiếp (Presentation) ]
  ├── Security Filter Chain & JWT EntryPoint
  ├── REST Controllers
  └── DTOs & Chuẩn hóa Response
         ↓
-[ Tầng Nghiệp vụ (Business Logic / Service Layer) ]
+[ Tầng Nghiệp vụ (Service Layer) ]
  ├── Use Case Services
  ├── Object Mapping - MapStruct
  └── Kiểm soát lỗi tập trung
         ↓
-[ Tầng Dữ liệu & Hạ tầng (Data Access / Persistence Layer) ]
+[ Tầng Dữ liệu & Hạ tầng (Persistence Layer) ]
  ├── Spring Data JPA Repositories
  └── JPA Entities & Enums
         ↓
@@ -95,14 +95,14 @@ Dockerfile                  Đóng gói ứng dụng thành Docker Image độc 
 pom.xml                     Quản lý dependencies, cấu hình build Maven và plugin MapStruct/Lombok
 ```
 
-Java 17+ · Spring Boot 4.1.1 · Spring Security · Spring Data JPA (Hibernate) · OAuth2 Resource Server / Nimbus JOSE + JWT · BCrypt Password Encoder · MapStruct · Lombok · MySQL · Maven Wrapper (`mvnw`) · Docker. Các thư viện và phiên bản được quản lý tập trung trong `pom.xml`.
-* `configuration`: Chứa cấu hình bảo mật (Spring Security, JWT) và khởi tạo các Bean hệ thống.
+Java 17+ · Spring Boot 4.1.1 · Spring Security · Spring Data JPA (Hibernate) · OAuth2 Resource Server / Nimbus JOSE + JWT · BCrypt Password Encoder · MapStruct · Lombok · MySQL · Maven Wrapper· Docker. Các thư viện và phiên bản được quản lý tập trung trong `pom.xml`.
+* `configuration`: Chứa cấu hình bảo mật và khởi tạo các Bean hệ thống.
 
 ---
 
 ## Bảo mật & Xác thực
 
-* **Cơ chế**: Sử dụng JSON Web Token (JWT) cho Authentication và Authorization.
+* **Cơ chế**: Sử dụng JWT cho Authentication và Authorization.
 * **Xử lý tập trung**: Kiểm tra tính hợp lệ của Token và quyền hạn người dùng tại tầng Filter/Middleware của Spring Security.
 * **Mã nguồn**: Tầng Controller kiểm tra quyền thủ công; bảo vệ tài nguyên hoàn toàn qua các Annotation bảo mật (e.g. `@PreAuthorize`).
 
@@ -160,16 +160,16 @@ Trong trường hợp có lỗi nghiệp vụ:
 }
 ```
 
-## Tài liệu API (Swagger UI)
+## Tài liệu API
 
 Dự án tích hợp sẵn thư viện `springdoc-openapi` để tự động tạo tài liệu tương tác API trực quan:
 
 * **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html) *(khi chạy local)*
-* **OpenAPI Spec (JSON)**: `http://localhost:8080/v3/api-docs`
+* **OpenAPI Spec **: `http://localhost:8080/v3/api-docs`
 
 ---
 
-## Cài đặt & Triển khai (Docker)
+## Cài đặt & Triển khai Docker
 
 Hệ thống đã cấu hình sẵn `Dockerfile` và `docker-compose.yml` để đóng gói toàn bộ môi trường (App & MySQL Database).
 
@@ -198,4 +198,4 @@ cd hotel-booking-backend
 - Tích hợp cổng thanh toán trực tuyến.
 - Bổ sung Redis Cache giúp tăng tốc truy vấn danh sách phòng.
 - Tích hợp OAuth2 (Đăng nhập qua Google).
-- Bổ sung phân trang (Pagination) và giám sát hệ thống (Prometheus + Grafana).
+- Bổ sung phân trang và giám sát hệ thống (Prometheus + Grafana).
